@@ -88,6 +88,20 @@ class AddressBook {
         return this.contacts.reduce(count => count + 1, 0);
     }
 
+    getCountByCityOrState() {
+        let cityCount = this.contacts.reduce((acc, contact) => {
+            acc[contact.city] = (acc[contact.city] || 0) + 1;
+            return acc;
+        }, {});
+
+        let stateCount = this.contacts.reduce((acc, contact) => {
+            acc[contact.state] = (acc[contact.state] || 0) + 1;
+            return acc;
+        }, {});
+
+        return { cityCount, stateCount };
+    }
+
     displayContacts() {
         if (this.contacts.length === 0) {
             console.log("Address Book is empty.");
@@ -117,31 +131,17 @@ class AddressBook {
 try {
     let addressBook = new AddressBook();
 
-    let contact1 = new Contact("OmP", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
+    let contact1 = new Contact("OmK", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
     let contact2 = new Contact("Deepansh", "Verma", "789 Market", "Mumbai", "Maharashtra", "40001", "9123456789", "deepansh.verma@example.com");
-    let duplicateContact = new Contact("OmP", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
 
     addressBook.addContact(contact1);
     addressBook.addContact(contact2);
-    addressBook.addContact(duplicateContact); // This should trigger a duplicate warning
 
     console.log("\nAddress Book:");
     addressBook.displayContacts();
 
-    console.log("\nContacts in Delhi:");
-    console.log(addressBook.viewPersonsByCity("Delhi"));
-
-    console.log("\nContacts in Maharashtra:");
-    console.log(addressBook.viewPersonsByState("Maharashtra"));
-
-    console.log("\nSearching for 'Om' in 'Delhi':");
-    console.log(addressBook.searchPersonByCityOrState("Om", "Delhi"));
-
-    // Deleting a contact
-    addressBook.deleteContact("Om", "Prakash");
-    console.log("\nAfter Deletion:");
-    addressBook.displayContacts();
-
+    console.log("\nCount by City and State:");
+    console.log(addressBook.getCountByCityOrState());
 } catch (error) {
     console.error(error.message);
 }
